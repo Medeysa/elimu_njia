@@ -1,194 +1,205 @@
-Welcome to your new TanStack Start app!
+# Elimu Njia — TCU Admission Explorer
 
-# Getting Started
+A real project for a student engineering team: turn a 371-page PDF admission guidebook
+into a service that answers one question well — **"with my A-Level results, where can I
+study?"**
 
-To run this application:
+The data is already extracted and verified. What does not exist yet is the software.
+That is what you are building.
 
-```bash
-bun install
-bun --bun run dev
+---
+
+## Why this project is worth building
+
+Every year around 128,000 bachelor's places open across 93 Tanzanian institutions, and
+the only official source is a PDF that almost nobody reads end to end. Students pick
+programmes from rumour and from what a friend's cousin did. A search box and an
+eligibility check is not a hard product, but it is a genuinely useful one, and it has
+every ingredient a training project needs: real messy data, a non-trivial algorithm, a
+shared API contract, and three clients that must agree with each other.
+
+You are not building a demo. Build it as if people will use it in July.
+
+---
+
+## The team
+
+Three tracks working in parallel against one contract.
+
+| Track | Stack | Owns |
+|---|---|---|
+| **Backend** | Django 5 + DRF, PostgreSQL, drf-spectacular (Swagger) | Data model, importer, API, eligibility engine |
+| **Frontend** | React 19, TanStack Query + Router + Table, shadcn/ui, lucide-react | Web app |
+| **Mobile** | React Native (Expo), TanStack Query | Android/iOS app |
+
+Suggested sizing is 2–3 students per track over 8 weeks. If your team is smaller or the
+timeline shorter, cut scope from the **Stretch** sections in each task list first, never
+from Milestone 1–3.
+
+### The one rule that makes parallel work possible
+
+**The eligibility algorithm lives in the backend and nowhere else.**
+
+It is tempting for the web and mobile clients to each compute points locally — it is only
+about thirty lines. Do not. The moment two clients implement it, they drift, and a student
+gets told they qualify for medicine on their phone and not on the web. The rule the whole
+team follows: *clients render, the server decides.*
+
+The one exception is the running points total in the results-entry form, which updates as
+the user types and is cosmetic. Everything that affects which programmes are shown comes
+from `POST /api/v1/eligibility/check/`.
+
+---
+
+## Repository layout
+
+Three repos, or one monorepo with three folders — your call, but decide in week 1.
+
+```
+tcu-admissions/
+├── backend/          Django project, seed importer, tests
+├── web/              React 19 + Vite
+├── mobile/           Expo React Native
+└── docs/
+    ├── API_CONTRACT.md      the shared contract — read this first
+    ├── TASKS_BACKEND.md
+    ├── TASKS_FRONTEND.md
+    ├── TASKS_MOBILE.md
+    └── seed_data.json       verified guidebook data, 980 programmes
 ```
 
-# Building For Production
+---
 
-To build this application for production:
+## The data you are given
 
-```bash
-bun --bun run build
-```
+`docs/seed_data.json` — extracted from the official guidebook and cross-checked. It holds:
 
-## Styling
+| Collection | Count | Notes |
+|---|---|---|
+| `institutions` | 93 | name, abbreviation, region, type, ownership, slug |
+| `programmes` | 980 | name, code, requirements text, min points, capacity, duration, field |
+| `subjects` | 27 | canonical A-Level subject list |
+| `grade_conditions` | 176 | per-subject minimum grades, e.g. "at least C in Chemistry" |
+| `grading_scales` | 3 | NECTA point values by exam year |
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+Total capacity across all programmes: 128,528 places.
 
-### Removing Tailwind CSS
+### What is trustworthy and what is not
 
-If you prefer not to use Tailwind CSS:
+The extraction was validated by checking that programme codes share a prefix within each
+institution — a stray code exposes a misfiled programme. The final data has zero
+mismatched prefixes across all 93 institutions, and the institution list joins 1:1 against
+the guidebook's own Table 3. Treat the data as sound.
 
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Remove `@tailwindcss/vite` and `tailwindcss` from `package.json`
+Three caveats you must handle in code rather than "fix" in the data:
 
-## Linting & Formatting
+1. **Two rows carry typos from the source itself** — one programme prints a duration of
+   100 years, another 25. They are flagged in `data_note`. Surface the note; do not
+   silently correct the guidebook.
+2. **40 programmes have no numeric duration** (`"3-6"` for Open University, `"4 or 5"`,
+   or blank). `duration_years` is null for these; `duration_text` always has the printed
+   value. Never render "null years".
+3. **31 programmes have no parsed subject list.** Their requirements are phrased in a way
+   no parser should be trusted to interpret. These are not failures — they are a real
+   category, and the API returns them as `REVIEW_WORDING` so a human reads the text.
 
+More generally: **every programme must be able to show its full official requirement text
+and guidebook page number.** The eligibility result is a guide that narrows 980 options to
+a shortlist; the printed wording is what decides. Any screen that shows a verdict without
+a route to the source text is not done.
 
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
+---
 
-```bash
-bun --bun run lint
-bun --bun run format
-bun --bun run check
-```
+## Milestones
 
+Each milestone ends with a demo to the whole team. Working software only — no slides.
 
+**Milestone 1 — Walking skeleton (week 1–2)**
+Backend serves `GET /api/v1/programmes/` from Postgres with real seeded data. Web renders
+the list. Mobile renders the list. Nothing is pretty, nothing is filtered, but data flows
+end to end on all three clients. *This is the most important milestone; do not let it
+slip.*
 
-## Routing
+**Milestone 2 — Browse and search (week 3–4)**
+Server-side filtering, search, pagination, ordering. Institution directory. Programme
+detail with full requirement text. Swagger published and accurate.
 
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
+**Milestone 3 — Eligibility (week 5–6)**
+The `eligibility/check/` endpoint with the full algorithm including grade conditions.
+Results-entry form on web and mobile. The four result buckets. This is the heart of the
+product.
 
-### Adding A Route
+**Milestone 4 — Make it real (week 7)**
+Offline caching on mobile. Loading and empty states everywhere. Accessibility pass on web.
+Guide screen with dates and rules. Error handling that explains what to do.
 
-To add a new route to your application just add a new file in the `./src/routes` directory.
+**Milestone 5 — Ship (week 8)**
+Deployed backend, deployed web app, mobile build installable on a real phone. README that
+a stranger can follow. Handover demo.
 
-TanStack will automatically generate the content of the route file for you.
+---
 
-Now that you have two routes you can use a `Link` component to navigate between them.
+## Definition of done
 
-### Adding Links
+A ticket is done when all of these are true. This is not negotiable per-track.
 
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
+- It works against the real 980-programme dataset, not fixtures of three rows
+- Loading, empty, and error states exist and say something useful
+- It works on a 360px-wide screen (web) or a small Android device (mobile)
+- Tests cover the logic, not the framework
+- No secrets in the repo
+- Someone else on your track has reviewed the PR
+- The API contract was not changed unilaterally
 
-```tsx
-import { Link } from "@tanstack/react-router";
-```
+---
 
-Then anywhere in your JSX you can use it like so:
+## Working agreements
 
-```tsx
-<Link to="/about">About</Link>
-```
+**Branching.** `main` always deploys. Feature branches, PRs, one reviewer. No direct
+pushes to main after week 1.
 
-This will create a link that will navigate to the `/about` route.
+**Contract changes.** If a track needs the API to change, open an issue tagged
+`contract`, get agreement from the other two tracks, then update `API_CONTRACT.md` in the
+same PR as the implementation. A contract change that lands without the doc update gets
+reverted.
 
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
+**Unblocking.** Frontend and mobile must not wait for backend. Mock the contract from day
+one — MSW on web, the same handlers on mobile. If the backend is late, the clients should
+still be demoable. This is the point of writing the contract first.
 
-### Using A Layout
+**Standups.** Fifteen minutes, three questions: what shipped, what is next, what is
+blocking. Blocked more than a day is an escalation, not a personal failing.
 
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
+**Ask for help early.** The measure of a good junior engineer is not solving everything
+alone, it is being unblocked fast and not repeating the same block twice.
 
-Here is an example layout that includes a header:
+---
 
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+## What each track should learn
 
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
+These are the actual learning objectives; the tickets are just the vehicle.
 
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
+**Backend** — modelling real data with real edge cases, keeping business logic out of
+views, query performance under `select_related`/`prefetch_related`, honest API design,
+generated documentation, testing an algorithm rather than a framework.
 
-## Server Functions
+**Frontend** — server state versus client state (TanStack Query is not Redux), URL as the
+source of truth for filters, composing an accessible component library instead of styling
+divs, rendering long lists without jank.
 
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
+**Mobile** — the same API on a device with worse network and less screen, offline-first
+caching, platform navigation patterns, and shipping a build to a physical phone.
 
-```tsx
-import { createServerFn } from '@tanstack/react-start'
+**Everyone** — reading someone else's contract, disagreeing productively in a PR, and
+saying "I don't know yet" out loud.
 
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
+---
 
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
+## Source
 
-## API Routes
+Bachelor's Degree Admission Guidebook for the 2026/2027 Admission Cycle (For Holders of
+Secondary School Qualifications), Tanzania Commission for Universities, July 2026.
+ISBN 978-9976-9353-1-4.
 
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+The guidebook is the authority. Where this project and the guidebook disagree, the
+guidebook wins, and that is a bug to file.
