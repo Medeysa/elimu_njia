@@ -1,4 +1,4 @@
-import { GraduationCap, ArrowUpRight } from "lucide-react"
+import {  ArrowUpRight } from "lucide-react"
 import { Link } from "@tanstack/react-router"
 import logo from "../assets/tculogo.png"
 
