@@ -1,5 +1,6 @@
 import { Search, ArrowRight } from "lucide-react"
 
+
 function Hero() {
   return (
     <section className="relative overflow-hidden bg-[#07183D]">

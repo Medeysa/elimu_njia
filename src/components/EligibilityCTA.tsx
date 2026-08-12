@@ -1,5 +1,5 @@
 import { ArrowRight, GraduationCap } from "lucide-react"
-
+import { Link } from "@tanstack/react-router"
 
 function EligibilityCTA() {
   return (
@@ -30,13 +30,16 @@ function EligibilityCTA() {
           </p>
 
           {/* Button */}
-          <button
-            type="button"
-       className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#C62828] px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#A91F1F] hover:shadow-xl sm:w-auto"
-          >
-            Check Your Eligibility
-            <ArrowRight className="h-4 w-4" />
-          </button>
+          <div className=" md:block">
+                    <Link
+                      to="/Eligibility"
+                      className="group inline-flex items-center gap-2 rounded-lg bg-[#C62828] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#A91F1F] hover:shadow-md"
+                    >
+                      Check Eligibility
+          
+                      <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                    </Link>
+                  </div>
 
         </div>
       </div>

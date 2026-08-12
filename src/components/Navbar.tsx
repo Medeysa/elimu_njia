@@ -3,9 +3,9 @@ import { Link } from "@tanstack/react-router"
 import {
   Menu,
   X,
-  GraduationCap,
   ArrowRight,
 } from "lucide-react"
+import logo from "../assets/tculogo.png"
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -24,8 +24,8 @@ function Navbar() {
           onClick={closeMenu}
           className="group flex items-center gap-3"
         >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#07183D] text-white transition-colors duration-200 group-hover:bg-[#C62828]">
-            <GraduationCap className="h-6 w-6" />
+          <div className="flex h-13 w-13 shrink-0 items-center justify-center rounded-xl bg-[#07183D] text-white transition-colors duration-200 group-hover:bg-[#C62828]">
+            <img src={logo} alt="TCU Logo" className="h-11 w-11" />
           </div>
 
           <div className="min-w-0">

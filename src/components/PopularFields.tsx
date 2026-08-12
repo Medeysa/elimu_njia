@@ -7,6 +7,7 @@ import {
   Code2,
   HeartPulse,
   FlaskConical,
+  Scale,
 } from "lucide-react"
 
 const fields = [
@@ -40,6 +41,11 @@ const fields = [
       "Explore programmes in mathematics, chemistry, physics and more.",
     icon: FlaskConical,
   },
+   {
+      title: "Law & Social Sciences",
+      description: "Discover law and social science programmes.",
+      icon: Scale,
+    },
 ]
 
 function PopularFields() {

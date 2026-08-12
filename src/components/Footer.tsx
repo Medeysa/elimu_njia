@@ -1,5 +1,6 @@
 import { GraduationCap, ArrowUpRight } from "lucide-react"
 import { Link } from "@tanstack/react-router"
+import logo from "../assets/tculogo.png"
 
 function Footer() {
   return (
@@ -11,8 +12,8 @@ function Footer() {
           {/* Brand */}
           <div>
             <Link to="/" className="inline-flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#C62828]">
-                <GraduationCap className="h-5 w-5" />
+              <div className="flex h-13 w-13 items-center justify-center rounded-full border-2 border-[#C62828]">
+                <img src={logo} alt="TCU Logo" className="h-10 w-10 rounded-full" />
               </div>
 
               <div>
