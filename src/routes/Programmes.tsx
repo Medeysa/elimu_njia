@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Search, SlidersHorizontal, ChevronDown } from 'lucide-react'
+import { useState } from 'react'
 import ProgrammeCard from '../components/programmes/ProgrammeCard'
+import ProgrammeSearch from "../components/programmes/ProgrammeSearch"
 import { programmes } from '../data/programmes'
 
 export const Route = createFileRoute('/Programmes')({
@@ -9,7 +11,23 @@ export const Route = createFileRoute('/Programmes')({
 
 
 function ProgrammesPage() {
+   const [search, setSearch] = useState("")
+   const filteredProgrammes = programmes.filter((programme) => {
+  const searchTerm = search.toLowerCase().trim()
+
+  if (!searchTerm) {
+    return true
+  }
+
   return (
+    programme.name.toLowerCase().includes(searchTerm) ||
+    programme.institution.toLowerCase().includes(searchTerm) ||
+    programme.region.toLowerCase().includes(searchTerm) ||
+    programme.code.toLowerCase().includes(searchTerm)
+  )
+})
+  return (
+   
     <main className="min-h-screen bg-[#F5F7FA]">
       {/* =========================
           PAGE HEADER
@@ -28,26 +46,82 @@ function ProgrammesPage() {
             Find degree programmes from universities and other institutions
             across Tanzania.
           </p>
+          
 
           {/* Search */}
           <div className="mt-7 w-full max-w-3xl sm:mt-8">
-            <div className="flex items-center rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-200 focus-within:border-[#C62828] focus-within:ring-2 focus-within:ring-[#C62828]/10">
-              <Search
-                className="ml-4 h-5 w-5 shrink-0 text-gray-400"
-                aria-hidden="true"
-              />
+            
+             <ProgrammeSearch
+  value={search}
+  onChange={setSearch}
+/>
 
-              <input
-                type="search"
-                placeholder="Search programmes, institutions or code..."
-                aria-label="Search programmes"
-                className="min-w-0 flex-1 bg-transparent px-3 py-4 text-sm text-gray-900 outline-none placeholder:text-gray-400 sm:text-base"
-              />
+            
             </div>
           </div>
-        </div>
+        
       </section>
 
+<section className="py-10">
+  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+    <div className="mb-6">
+      <p className="text-sm font-semibold text-[#C62828]">
+        Programmes
+      </p>
+
+      <h2 className="mt-1 text-xl font-bold text-[#07183D]">
+        {filteredProgrammes.length} programmes
+      </h2>
+    </div>
+
+    {filteredProgrammes.length === 0 ? (
+      <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center">
+
+        <h3 className="text-lg font-semibold text-[#07183D]">
+          No programmes found
+        </h3>
+
+        <p className="mt-2 text-sm text-gray-500">
+          Try a different programme name, institution, region or code.
+        </p>
+
+        <button
+          type="button"
+          onClick={() => setSearch("")}
+          className="
+            mt-5 rounded-lg bg-[#C62828]
+            px-4 py-2.5 text-sm font-semibold text-white
+            transition-colors
+            hover:bg-[#A91F1F]
+          "
+        >
+          Clear search
+        </button>
+
+      </div>
+    ) : (
+      <div className="grid gap-5 lg:grid-cols-2">
+
+        {filteredProgrammes.map((programme) => (
+          <ProgrammeCard
+            key={programme.code}
+            code={programme.code}
+            name={programme.name}
+            award={programme.award}
+            institution={programme.institution}
+            region={programme.region}
+            points={programme.points}
+            duration={programme.duration}
+            capacity={programme.capacity}
+          />
+        ))}
+
+      </div>
+    )}
+
+  </div>
+</section>
       {/* =========================
           RESULTS AREA
       ========================== */}
