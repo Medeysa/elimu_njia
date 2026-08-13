@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router"
 import {
   ArrowRight,
   Building2,
@@ -28,7 +29,11 @@ function ProgrammeCard({
   capacity,
 }: ProgrammeCardProps) {
   return (
-    <article className="group rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C62828]/30 hover:shadow-md sm:p-6">
+    <Link
+      to="/programmes/$code"
+      params={{ code }}
+      className="group block rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C62828]/30 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C62828] focus-visible:ring-offset-2 sm:p-6"
+    >
 
       {/* Top section */}
       <div className="flex items-start justify-between gap-4">
@@ -45,13 +50,12 @@ function ProgrammeCard({
 
         </div>
 
-        <button
-          type="button"
-          aria-label={`View ${name}`}
+        <div
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gray-200 text-gray-500 transition-all duration-200 group-hover:border-[#C62828] group-hover:bg-[#C62828] group-hover:text-white"
+          aria-hidden="true"
         >
           <ArrowRight className="h-4 w-4" />
-        </button>
+        </div>
 
       </div>
 
@@ -136,7 +140,7 @@ function ProgrammeCard({
 
       </div>
 
-    </article>
+    </Link>
   )
 }
 

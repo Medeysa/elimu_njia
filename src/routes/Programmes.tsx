@@ -1,63 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Search, SlidersHorizontal, ChevronDown } from 'lucide-react'
 import ProgrammeCard from '../components/programmes/ProgrammeCard'
+import { programmes } from '../data/programmes'
 
 export const Route = createFileRoute('/Programmes')({
   component: ProgrammesPage,
 })
 
-const programmes = [
-  {
-    name: 'Bachelor of Medicine and Surgery',
-    award: 'Doctor of Medicine',
-    institution: 'Muhimbili University of Health and Allied Sciences',
-    region: 'Dar es Salaam',
-    code: 'MD001',
-    points: 4,
-    duration: '5 years',
-    capacity: 120,
-  },
-  {
-    name: 'Bachelor of Science in Computer Science',
-    award: 'Bachelor of Science',
-    institution: 'University of Dodoma',
-    region: 'Dodoma',
-    code: 'UDOM-CS01',
-    points: 4,
-    duration: '3 years',
-    capacity: 80,
-  },
-  {
-    name: 'Bachelor of Science in Civil Engineering',
-    award: 'Bachelor of Science',
-    institution: 'Ardhi University',
-    region: 'Dar es Salaam',
-    code: 'ARU-CE01',
-    points: 5,
-    duration: '4 years',
-    capacity: 60,
-  },
-  {
-    name: 'Bachelor of Engineering in Electrical Engineering',
-    award: 'Bachelor of Engineering',
-    institution: 'University of Dar es Salaam',
-    region: 'Dar es Salaam',
-    code: 'UDSM-EE01',
-    points: 5,
-    duration: '4 years',
-    capacity: 70,
-  },
-  {
-    name: 'Bachelor of Pharmacy',
-    award: 'Bachelor of Pharmacy',
-    institution: 'St. John’s University of Tanzania',
-    region: 'Dodoma',
-    code: 'SJU-PH01',
-    points: 4,
-    duration: '4 years',
-    capacity: 100,
-  },
-]
+
 function ProgrammesPage() {
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
