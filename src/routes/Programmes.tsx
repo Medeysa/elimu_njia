@@ -1,33 +1,31 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Search, SlidersHorizontal, ChevronDown } from 'lucide-react'
+import { SlidersHorizontal, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 import ProgrammeCard from '../components/programmes/ProgrammeCard'
-import ProgrammeSearch from "../components/programmes/ProgrammeSearch"
+import ProgrammeSearch from '../components/programmes/ProgrammeSearch'
 import { programmes } from '../data/programmes'
 
 export const Route = createFileRoute('/Programmes')({
   component: ProgrammesPage,
 })
 
-
 function ProgrammesPage() {
-   const [search, setSearch] = useState("")
-   const filteredProgrammes = programmes.filter((programme) => {
-  const searchTerm = search.toLowerCase().trim()
+  const [search, setSearch] = useState('')
+  const filteredProgrammes = programmes.filter((programme) => {
+    const searchTerm = search.toLowerCase().trim()
 
-  if (!searchTerm) {
-    return true
-  }
+    if (!searchTerm) {
+      return true
+    }
 
+    return (
+      programme.name.toLowerCase().includes(searchTerm) ||
+      programme.institution.toLowerCase().includes(searchTerm) ||
+      programme.region.toLowerCase().includes(searchTerm) ||
+      programme.code.toLowerCase().includes(searchTerm)
+    )
+  })
   return (
-    programme.name.toLowerCase().includes(searchTerm) ||
-    programme.institution.toLowerCase().includes(searchTerm) ||
-    programme.region.toLowerCase().includes(searchTerm) ||
-    programme.code.toLowerCase().includes(searchTerm)
-  )
-})
-  return (
-   
     <main className="min-h-screen bg-[#F5F7FA]">
       {/* =========================
           PAGE HEADER
@@ -46,82 +44,15 @@ function ProgrammesPage() {
             Find degree programmes from universities and other institutions
             across Tanzania.
           </p>
-          
 
           {/* Search */}
           <div className="mt-7 w-full max-w-3xl sm:mt-8">
-            
-             <ProgrammeSearch
-  value={search}
-  onChange={setSearch}
-/>
-
-            
-            </div>
+            <ProgrammeSearch value={search} onChange={setSearch} />
           </div>
-        
+        </div>
       </section>
 
-<section className="py-10">
-  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-    <div className="mb-6">
-      <p className="text-sm font-semibold text-[#C62828]">
-        Programmes
-      </p>
-
-      <h2 className="mt-1 text-xl font-bold text-[#07183D]">
-        {filteredProgrammes.length} programmes
-      </h2>
-    </div>
-
-    {filteredProgrammes.length === 0 ? (
-      <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center">
-
-        <h3 className="text-lg font-semibold text-[#07183D]">
-          No programmes found
-        </h3>
-
-        <p className="mt-2 text-sm text-gray-500">
-          Try a different programme name, institution, region or code.
-        </p>
-
-        <button
-          type="button"
-          onClick={() => setSearch("")}
-          className="
-            mt-5 rounded-lg bg-[#C62828]
-            px-4 py-2.5 text-sm font-semibold text-white
-            transition-colors
-            hover:bg-[#A91F1F]
-          "
-        >
-          Clear search
-        </button>
-
-      </div>
-    ) : (
-      <div className="grid gap-5 lg:grid-cols-2">
-
-        {filteredProgrammes.map((programme) => (
-          <ProgrammeCard
-            key={programme.code}
-            code={programme.code}
-            name={programme.name}
-            award={programme.award}
-            institution={programme.institution}
-            region={programme.region}
-            points={programme.points}
-            duration={programme.duration}
-            capacity={programme.capacity}
-          />
-        ))}
-
-      </div>
-    )}
-
-  </div>
-</section>
       {/* =========================
           RESULTS AREA
       ========================== */}
@@ -169,7 +100,7 @@ function ProgrammesPage() {
               <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h2 className="text-lg font-bold text-[#07183D] sm:text-xl">
-                    980 programmes
+                    {filteredProgrammes.length}  Programmes
                   </h2>
 
                   <p className="mt-1 text-sm text-gray-500">
@@ -239,9 +170,46 @@ function ProgrammesPage() {
                     →
                   </button>
                 </div>
-                {programmes.map((programme) => (
-                  <ProgrammeCard key={programme.code} {...programme} />
-                ))}
+                     {filteredProgrammes.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center">
+              <h3 className="text-lg font-semibold text-[#07183D]">
+                No programmes found
+              </h3>
+
+              <p className="mt-2 text-sm text-gray-500">
+                Try a different programme name, institution, region or code.
+              </p>
+
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="
+            mt-5 rounded-lg bg-[#C62828]
+            px-4 py-2.5 text-sm font-semibold text-white
+            transition-colors
+            hover:bg-[#A91F1F]
+          "
+              >
+                Clear search
+              </button>
+            </div>
+          ) : (
+            <div className="grid gap-5 lg:grid-cols-2">
+              {filteredProgrammes.map((programme) => (
+                <ProgrammeCard
+                  key={programme.code}
+                  code={programme.code}
+                  name={programme.name}
+                  award={programme.award}
+                  institution={programme.institution}
+                  region={programme.region}
+                  points={programme.points}
+                  duration={programme.duration}
+                  capacity={programme.capacity}
+                />
+              ))}
+            </div>
+          )}
               </div>
             </div>
           </div>
