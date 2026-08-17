@@ -1,25 +1,25 @@
-import {  ArrowUpRight } from "lucide-react"
-import { Link } from "@tanstack/react-router"
-import logo from "../assets/tculogo.png"
+import { ArrowUpRight } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import logo from '../assets/tculogo.png'
 
 function Footer() {
   return (
     <footer className="bg-[#07183D] text-white">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-
           {/* Brand */}
           <div>
             <Link to="/" className="inline-flex items-center gap-3">
               <div className="flex h-13 w-13 items-center justify-center rounded-full border-2 border-[#C62828]">
-                <img src={logo} alt="TCU Logo" className="h-10 w-10 rounded-full" />
+                <img
+                  src={logo}
+                  alt="TCU Logo"
+                  className="h-10 w-10 rounded-full"
+                />
               </div>
 
               <div>
-                <p className="text-lg font-bold">
-                  Elimu Njia
-                </p>
+                <p className="text-lg font-bold">Elimu Njia</p>
 
                 <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400">
                   TCU Admission Explorer
@@ -28,8 +28,8 @@ function Footer() {
             </Link>
 
             <p className="mt-5 max-w-sm text-sm leading-6 text-gray-400">
-              Explore degree programmes across Tanzania and understand
-              your admission options using official requirements.
+              Explore degree programmes across Tanzania and understand your
+              admission options using official requirements.
             </p>
           </div>
 
@@ -42,7 +42,7 @@ function Footer() {
             <div className="mt-5 flex flex-col gap-3">
               <Link
                 to="/Programmes"
-                search={{ category: "" }}
+                search={{ category: '' }}
                 className="flex w-fit items-center gap-1 text-sm text-gray-400 transition-colors hover:text-white"
               >
                 Programmes
@@ -51,7 +51,7 @@ function Footer() {
 
               <Link
                 to="/Institutions"
-                search={{ category: "" }}
+               
                 className="flex w-fit items-center gap-1 text-sm text-gray-400 transition-colors hover:text-white"
               >
                 Institutions
@@ -60,7 +60,7 @@ function Footer() {
 
               <Link
                 to="/Eligibility"
-                search={{ category: "" }}
+
                 className="flex w-fit items-center gap-1 text-sm text-gray-400 transition-colors hover:text-white"
               >
                 Check Eligibility
@@ -76,40 +76,34 @@ function Footer() {
             </h3>
 
             <div className="mt-5 flex flex-col gap-3">
-     <a
-  href="https://www.necta.go.tz/"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="w-fit text-sm text-gray-400 transition-colors hover:text-white"
->
-  NECTA
-</a>
               <a
-  href="https://tcu.go.tz/"
-  target="_blank"
-  rel="noopener noreferrer"
- className="w-fit text-sm text-gray-400 transition-colors hover:text-white"
->
-  Official TCU Website
-</a>
+                href="https://www.necta.go.tz/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-fit text-sm text-gray-400 transition-colors hover:text-white"
+              >
+                NECTA
+              </a>
+              <a
+                href="https://tcu.go.tz/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-fit text-sm text-gray-400 transition-colors hover:text-white"
+              >
+                Official TCU Website
+              </a>
             </div>
           </div>
-
         </div>
 
         {/* Bottom */}
         <div className="mt-12 border-t border-white/10 pt-6">
           <div className="flex flex-col gap-3 text-sm text-gray-500 sm:flex-row sm:items-center sm:justify-between">
-            <p>
-              © 2026 Elimu Njia. All rights reserved.
-            </p>
+            <p>© 2026 Elimu Njia. All rights reserved.</p>
 
-            <p>
-              TCU Admission Explorer · 2026/2027
-            </p>
+            <p>TCU Admission Explorer · 2026/2027</p>
           </div>
         </div>
-
       </div>
     </footer>
   )
