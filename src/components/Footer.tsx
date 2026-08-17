@@ -42,6 +42,7 @@ function Footer() {
             <div className="mt-5 flex flex-col gap-3">
               <Link
                 to="/Programmes"
+                search={{ category: "" }}
                 className="flex w-fit items-center gap-1 text-sm text-gray-400 transition-colors hover:text-white"
               >
                 Programmes
@@ -50,6 +51,7 @@ function Footer() {
 
               <Link
                 to="/Institutions"
+                search={{ category: "" }}
                 className="flex w-fit items-center gap-1 text-sm text-gray-400 transition-colors hover:text-white"
               >
                 Institutions
@@ -58,6 +60,7 @@ function Footer() {
 
               <Link
                 to="/Eligibility"
+                search={{ category: "" }}
                 className="flex w-fit items-center gap-1 text-sm text-gray-400 transition-colors hover:text-white"
               >
                 Check Eligibility
@@ -73,19 +76,22 @@ function Footer() {
             </h3>
 
             <div className="mt-5 flex flex-col gap-3">
-              <Link
-                to="/Guide"
-                className="w-fit text-sm text-gray-400 transition-colors hover:text-white"
-              >
-                Admission Guide
-              </Link>
-
+     <a
+  href="https://www.necta.go.tz/"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="w-fit text-sm text-gray-400 transition-colors hover:text-white"
+>
+  NECTA
+</a>
               <a
-                href="#"
-                className="w-fit text-sm text-gray-400 transition-colors hover:text-white"
-              >
-                About Elimu Njia
-              </a>
+  href="https://tcu.go.tz/"
+  target="_blank"
+  rel="noopener noreferrer"
+ className="w-fit text-sm text-gray-400 transition-colors hover:text-white"
+>
+  Official TCU Website
+</a>
             </div>
           </div>
 

@@ -7,6 +7,13 @@ import {
 
 function HowItWorks() {
   const steps = [
+     {
+      number: "02",
+      title: "Explore programmes",
+      description:
+        "Browse degree programmes from universities and other institutions across Tanzania.",
+      icon: Search,
+    },
     {
       number: "01",
       title: "Enter your results",
@@ -14,13 +21,7 @@ function HowItWorks() {
         "Add your A-Level exam year, subjects and grades to get started.",
       icon: FileText,
     },
-    {
-      number: "02",
-      title: "Explore programmes",
-      description:
-        "Browse degree programmes from universities and other institutions across Tanzania.",
-      icon: Search,
-    },
+   
     {
       number: "03",
       title: "Check eligibility",
