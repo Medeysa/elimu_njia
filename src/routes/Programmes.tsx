@@ -1,22 +1,33 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { SlidersHorizontal, ChevronDown } from 'lucide-react'
-import { useState } from 'react'
+import { useState } from "react"
 import ProgrammeCard from '../components/programmes/ProgrammeCard'
 import ProgrammeSearch from '../components/programmes/ProgrammeSearch'
 import { programmes } from '../data/programmes'
 import ProgrammeFilters from "../components/programmes/ProgrammeFilters"
 
 export const Route = createFileRoute('/Programmes')({
+  validateSearch: (search: Record<string, unknown>) => ({
+    category:
+      typeof search.category === "string"
+        ? search.category
+        : "",
+  }),
+
   component: ProgrammesPage,
 })
 function ProgrammesPage() {
+  const { category } = Route.useSearch()
   const [search, setSearch] = useState("")
-
+  
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [field, setField] = useState("")
   const [region, setRegion] = useState("")
   const [institution, setInstitution] = useState("")
   const [duration, setDuration] = useState("")
+  const navigate = useNavigate({
+  from: Route.fullPath,
+})
 
   const fields = [
     ...new Set(
@@ -55,6 +66,9 @@ function ProgrammesPage() {
 
     const matchesRegion =
       region === "" || programme.region === region
+      const matchesCategory =
+  category === "" || programme.fieldCategory === category
+
 
     const matchesInstitution =
       institution === "" || programme.institution === institution
@@ -66,6 +80,8 @@ function ProgrammesPage() {
       matchesSearch &&
       matchesField &&
       matchesRegion &&
+
+  matchesCategory &&
       matchesInstitution &&
       matchesDuration
     )
@@ -76,6 +92,12 @@ function ProgrammesPage() {
     setRegion("")
     setInstitution("")
     setDuration("")
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        category: "",
+      }),
+    })
   }
 
   return (

@@ -1,5 +1,5 @@
-import { useState } from "react"
 import { Link } from "@tanstack/react-router"
+import type { LucideIcon } from "lucide-react"
 import {
   ArrowRight,
   BriefcaseBusiness,
@@ -9,55 +9,69 @@ import {
   FlaskConical,
   Scale,
 } from "lucide-react"
+import { programmes } from "../data/programmes"
 
-const fields = [
-  {
-    title: "Computing & IT",
-    description:
-      "Computer science, software engineering and technology programmes.",
-    icon: Code2,
-  },
-  {
-    title: "Health Sciences",
-    description:
-      "Medicine, nursing, pharmacy and other health-related programmes.",
-    icon: HeartPulse,
-  },
-  {
-    title: "Engineering",
-    description:
-      "Explore engineering programmes across Tanzania.",
-    icon: Building2,
-  },
-  {
-    title: "Business",
-    description:
-      "Business, finance, accounting and management programmes.",
+const fieldMeta: Record<string, { description: string; icon: LucideIcon }> = {
+  "Business & Management": {
+    description: "Explore programmes that build leadership, strategy, and business skills.",
     icon: BriefcaseBusiness,
   },
-  {
-    title: "Science",
-    description:
-      "Explore programmes in mathematics, chemistry, physics and more.",
+  "Technology & IT": {
+    description: "Discover innovative courses in software, systems, and digital transformation.",
+    icon: Code2,
+  },
+  "Health Sciences": {
+    description: "Find programmes focused on patient care, wellbeing, and medical science.",
+    icon: HeartPulse,
+  },
+  "Science & Research": {
+    description: "Learn about research-driven programmes in scientific discovery and inquiry.",
     icon: FlaskConical,
   },
-   {
-      title: "Law & Social Sciences",
-      description: "Discover law and social science programmes.",
-      icon: Scale,
-    },
-]
+  "Law & Public Policy": {
+    description: "Study regulation, justice, governance, and public service pathways.",
+    icon: Scale,
+  },
+
+  Engineering: {
+    description: "Explore programmes that shape cities, systems, and modern infrastructure.",
+    icon: Building2,
+  },
+  "Computing & IT": {
+    description: "Discover innovative courses in software, systems, and digital transformation.",
+    icon: Code2,
+  },
+}
+
+const defaultFieldMeta = {
+  description: "Explore programmes in this field.",
+  icon: BriefcaseBusiness,
+}
 
 function PopularFields() {
-  const [activeField, setActiveField] = useState<string | null>(null)
+  const fieldCategories = [
+    ...new Set(
+      programmes
+        .map((programme) => programme.fieldCategory)
+        .filter(Boolean)
+    ),
+  ]
+
+  const fields = fieldCategories.map((category) => {
+    const categoryMeta = fieldMeta[category] ?? defaultFieldMeta
+
+    return {
+      title: category,
+      description: categoryMeta.description,
+      icon: categoryMeta.icon,
+    }
+  })
 
   return (
     <section className="bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
         {/* Heading */}
         <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-
           <div>
             <p className="text-sm font-semibold uppercase tracking-wider text-[#C62828]">
               Explore
@@ -75,37 +89,30 @@ function PopularFields() {
 
           <Link
             to="/Programmes"
+            search={{ category: "" }}
             className="group inline-flex items-center gap-2 text-sm font-semibold text-[#C62828] transition-colors hover:text-[#A91F1F]"
           >
             View all programmes
 
             <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
           </Link>
-
         </div>
 
         {/* Cards */}
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-
           {fields.map((field) => {
             const Icon = field.icon
-            const isActive = activeField === field.title
+           
 
             return (
               <Link
                 key={field.title}
                 to="/Programmes"
-                onClick={() => setActiveField(field.title)}
+                search={{ category: field.title }}
                 className={`
                   group relative block overflow-hidden
-                  rounded-2xl border bg-white p-6
+                  rounded-2xl border border-gray-200 bg-white p-6
                   transition-all duration-200 ease-out
-
-                  ${
-                    isActive
-                      ? "border-[#C62828]/40 shadow-xl -translate-y-1"
-                      : "border-gray-200"
-                  }
 
                   hover:-translate-y-1
                   hover:border-[#C62828]/30
@@ -119,19 +126,12 @@ function PopularFields() {
                   focus-visible:ring-offset-2
                 `}
               >
-
                 {/* Icon */}
                 <div
                   className={`
                     mb-5 flex h-12 w-12 items-center justify-center
-                    rounded-xl
+                    rounded-xl bg-red-50 text-[#C62828]
                     transition-all duration-200
-
-                    ${
-                      isActive
-                        ? "bg-[#C62828] text-white scale-105"
-                        : "bg-red-50 text-[#C62828]"
-                    }
 
                     group-hover:bg-[#C62828]
                     group-hover:text-white
@@ -146,14 +146,8 @@ function PopularFields() {
                 {/* Title */}
                 <h3
                   className={`
-                    text-lg font-bold
+                    text-lg font-bold text-[#07183D]
                     transition-colors duration-200
-
-                    ${
-                      isActive
-                        ? "text-[#C62828]"
-                        : "text-[#07183D]"
-                    }
 
                     group-hover:text-[#C62828]
                   `}
@@ -170,14 +164,8 @@ function PopularFields() {
                 <div
                   className={`
                     mt-5 flex items-center gap-2
-                    text-sm font-semibold
+                    text-sm font-semibold text-[#07183D]
                     transition-colors duration-200
-
-                    ${
-                      isActive
-                        ? "text-[#C62828]"
-                        : "text-[#07183D]"
-                    }
 
                     group-hover:text-[#C62828]
                   `}
@@ -189,21 +177,13 @@ function PopularFields() {
                       h-4 w-4
                       transition-transform duration-200
 
-                      ${
-                        isActive
-                          ? "translate-x-1"
-                          : ""
-                      }
-
                       group-hover:translate-x-1
                     `}
                   />
                 </div>
-
               </Link>
             )
           })}
-
         </div>
       </div>
     </section>

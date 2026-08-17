@@ -38,6 +38,7 @@ function ProgrammeDetailPage() {
 
           <Link
             to="/Programmes"
+            search={{ category: "" }}
             className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#C62828] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#A91F1F]"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -58,6 +59,7 @@ function ProgrammeDetailPage() {
 
           <Link
             to="/Programmes"
+            search={{ category: "" }}
             className="group inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition-colors hover:text-[#C62828]"
           >
             <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1" />
