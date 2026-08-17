@@ -6,6 +6,7 @@ export type Programme = {
   region: string
   points: number
   duration: string
+  field: string
   capacity: number
   entryRequirements: string
   gradeConditions: {
@@ -20,6 +21,7 @@ export const programmes: Programme[] = [
   {
     code: "MD001",
     name: "Bachelor of Medicine and Surgery",
+    field: "Medicine",
     award: "Doctor of Medicine",
     institution: "Muhimbili University of Health and Allied Sciences",
     region: "Dar es Salaam",
@@ -51,6 +53,7 @@ export const programmes: Programme[] = [
   {
     code: "CS001",
     name: "Bachelor of Science in Computer Science",
+    field: "Computer Science",
     award: "Bachelor Degree",
     institution: "University of Dodoma",
     region: "Dodoma",
@@ -78,6 +81,7 @@ export const programmes: Programme[] = [
   {
     code: "ENG001",
     name: "Bachelor of Science in Civil Engineering",
+    field: "Engineering",
     award: "Bachelor Degree",
     institution: "Ardhi University",
     region: "Dar es Salaam",

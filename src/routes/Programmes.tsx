@@ -4,28 +4,83 @@ import { useState } from 'react'
 import ProgrammeCard from '../components/programmes/ProgrammeCard'
 import ProgrammeSearch from '../components/programmes/ProgrammeSearch'
 import { programmes } from '../data/programmes'
+import ProgrammeFilters from "../components/programmes/ProgrammeFilters"
 
 export const Route = createFileRoute('/Programmes')({
   component: ProgrammesPage,
 })
-
 function ProgrammesPage() {
-  const [search, setSearch] = useState('')
-  const filteredProgrammes = programmes.filter((programme) => {
-    const searchTerm = search.toLowerCase().trim()
+  const [search, setSearch] = useState("")
 
-    if (!searchTerm) {
-      return true
-    }
+  const [filtersOpen, setFiltersOpen] = useState(false)
+  const [field, setField] = useState("")
+  const [region, setRegion] = useState("")
+  const [institution, setInstitution] = useState("")
+  const [duration, setDuration] = useState("")
+
+  const fields = [
+    ...new Set(
+      programmes
+        .map((programme) => programme.field)
+        .filter(Boolean)
+    ),
+  ]
+
+  const regions = [
+    ...new Set(
+      programmes
+        .map((programme) => programme.region)
+        .filter(Boolean)
+    ),
+  ]
+
+  const institutions = [
+    ...new Set(
+      programmes
+        .map((programme) => programme.institution)
+        .filter(Boolean)
+    ),
+  ]
+
+  const filteredProgrammes = programmes.filter((programme) => {
+    const matchesSearch =
+      search === "" ||
+      programme.name.toLowerCase().includes(search.toLowerCase()) ||
+      programme.institution.toLowerCase().includes(search.toLowerCase()) ||
+      programme.region.toLowerCase().includes(search.toLowerCase()) ||
+      programme.code.toLowerCase().includes(search.toLowerCase())
+
+    const matchesField =
+      field === "" || programme.field === field
+
+    const matchesRegion =
+      region === "" || programme.region === region
+
+    const matchesInstitution =
+      institution === "" || programme.institution === institution
+
+    const matchesDuration =
+      duration === "" || programme.duration.startsWith(duration)
 
     return (
-      programme.name.toLowerCase().includes(searchTerm) ||
-      programme.institution.toLowerCase().includes(searchTerm) ||
-      programme.region.toLowerCase().includes(searchTerm) ||
-      programme.code.toLowerCase().includes(searchTerm)
+      matchesSearch &&
+      matchesField &&
+      matchesRegion &&
+      matchesInstitution &&
+      matchesDuration
     )
   })
+
+  const clearFilters = () => {
+    setField("")
+    setRegion("")
+    setInstitution("")
+    setDuration("")
+  }
+
   return (
+
+  
     <main className="min-h-screen bg-[#F5F7FA]">
       {/* =========================
           PAGE HEADER
@@ -59,13 +114,71 @@ function ProgrammesPage() {
       <section>
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           {/* Mobile filters button */}
-          <button
-            type="button"
-            className="mb-6 flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-[#07183D] shadow-sm transition-colors hover:border-[#C62828] hover:text-[#C62828] sm:w-auto lg:hidden"
-          >
-            <SlidersHorizontal className="h-4 w-4" />
-            Filters
-          </button>
+         <button
+  type="button"
+  onClick={() => setFiltersOpen(true)}
+  className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-[#07183D] transition-colors hover:border-[#C62828] hover:text-[#C62828] lg:hidden"
+>
+  <SlidersHorizontal className="h-4 w-4" />
+  Filters
+</button>
+            {filtersOpen && (
+  <div className="fixed inset-0 z-50 lg:hidden">
+    
+    {/* Backdrop */}
+    <button
+      type="button"
+      aria-label="Close filters"
+      onClick={() => setFiltersOpen(false)}
+      className="absolute inset-0 bg-black/40"
+    />
+
+    {/* Drawer */}
+    <div className="absolute right-0 top-0 h-full w-[85%] max-w-sm overflow-y-auto bg-white p-6 shadow-xl">
+      
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold text-[#07183D]">
+          Filters
+        </h2>
+
+        <button
+          type="button"
+          onClick={() => setFiltersOpen(false)}
+          className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-[#07183D]"
+          aria-label="Close filters"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div className="mt-6">
+        <ProgrammeFilters
+          field={field}
+          region={region}
+          institution={institution}
+          duration={duration}
+          fields={fields}
+          regions={regions}
+          institutions={institutions}
+          onFieldChange={setField}
+          onRegionChange={setRegion}
+          onInstitutionChange={setInstitution}
+          onDurationChange={setDuration}
+          onClear={clearFilters}
+        />
+      </div>
+
+      <button
+        type="button"
+        onClick={() => setFiltersOpen(false)}
+        className="mt-6 w-full rounded-lg bg-[#C62828] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#A91F1F]"
+      >
+        Show results
+      </button>
+
+    </div>
+  </div>
+)}
 
           {/* Desktop layout */}
           <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
@@ -73,24 +186,21 @@ function ProgrammesPage() {
                 FILTER SIDEBAR
             ========================== */}
             <aside className="hidden lg:block">
-              <div className="sticky top-24 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-                <h2 className="text-base font-bold text-[#07183D]">Filters</h2>
-
-                <div className="mt-5 space-y-5">
-                  {/* Field */}
-                  <FilterSelect label="Field" value="All fields" />
-
-                  {/* Region */}
-                  <FilterSelect label="Region" value="All regions" />
-
-                  {/* Institution */}
-                  <FilterSelect label="Institution" value="All institutions" />
-
-                  {/* Duration */}
-                  <FilterSelect label="Duration" value="Any duration" />
-                </div>
-              </div>
-            </aside>
+  <ProgrammeFilters
+    field={field}
+    region={region}
+    institution={institution}
+    duration={duration}
+    fields={fields}
+    regions={regions}
+    institutions={institutions}
+    onFieldChange={setField}
+    onRegionChange={setRegion}
+    onInstitutionChange={setInstitution}
+    onDurationChange={setDuration}
+    onClear={clearFilters}
+  />
+</aside>
 
             {/* =========================
                 RESULTS
@@ -219,25 +329,5 @@ function ProgrammesPage() {
   )
 }
 
-/* =========================
-   FILTER SELECT
-========================== */
 
-function FilterSelect({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <label className="mb-2 block text-sm font-medium text-gray-700">
-        {label}
-      </label>
 
-      <button
-        type="button"
-        className="flex w-full items-center justify-between rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-left text-sm text-gray-600 transition-colors hover:border-[#C62828]"
-      >
-        <span className="truncate">{value}</span>
-
-        <ChevronDown className="ml-2 h-4 w-4 shrink-0 text-gray-400" />
-      </button>
-    </div>
-  )
-}
