@@ -9,6 +9,15 @@ export const Route = createFileRoute('/Eligibility')({
 })
 
 function EligibilityPage() {
+  // =====================================================
+  // EXAMINATION YEAR
+  // =====================================================
+  const [examYear, setExamYear] = useState('')
+  const [showValidation, setShowValidation] = useState(false)
+
+  // =====================================================
+  // SUBJECTS
+  // =====================================================
   const [subjects, setSubjects] = useState<
     {
       id: number
@@ -17,6 +26,9 @@ function EligibilityPage() {
     }[]
   >([])
 
+  // =====================================================
+  // AVAILABLE SUBJECTS
+  // =====================================================
   const availableSubjects = [
     'Biology',
     'Chemistry',
@@ -29,8 +41,15 @@ function EligibilityPage() {
     'Kiswahili',
   ]
 
+  // =====================================================
+  // AVAILABLE GRADES
+  // =====================================================
   const availableGrades = ['A', 'B', 'C', 'D', 'E', 'S', 'F']
 
+  // =====================================================
+  // GRADE POINTS
+  // Temporary UI calculation
+  // =====================================================
   const gradePoints: Record<string, number> = {
     A: 3,
     B: 2,
@@ -41,10 +60,16 @@ function EligibilityPage() {
     F: 0,
   }
 
+  // =====================================================
+  // TOTAL POINTS
+  // =====================================================
   const totalPoints = subjects.reduce((total, item) => {
     return total + (gradePoints[item.grade] ?? 0)
   }, 0)
 
+  // =====================================================
+  // ADD SUBJECT
+  // =====================================================
   const addSubject = () => {
     if (subjects.length >= 6) return
 
@@ -58,31 +83,95 @@ function EligibilityPage() {
     ])
   }
 
+  // =====================================================
+  // REMOVE SUBJECT
+  // =====================================================
   const removeSubject = (id: number) => {
-    setSubjects((current) => current.filter((item) => item.id !== id))
+    setSubjects((current) =>
+      current.filter((item) => item.id !== id),
+    )
   }
 
+  // =====================================================
+  // UPDATE SUBJECT
+  // =====================================================
   const updateSubject = (id: number, value: string) => {
     setSubjects((current) =>
       current.map((item) =>
-        item.id === id ? { ...item, subject: value } : item,
+        item.id === id
+          ? {
+              ...item,
+              subject: value,
+            }
+          : item,
       ),
     )
   }
 
+  // =====================================================
+  // UPDATE GRADE
+  // =====================================================
   const updateGrade = (id: number, value: string) => {
     setSubjects((current) =>
       current.map((item) =>
-        item.id === id ? { ...item, grade: value } : item,
+        item.id === id
+          ? {
+              ...item,
+              grade: value,
+            }
+          : item,
       ),
     )
+  }
+
+  // =====================================================
+  // SELECTED SUBJECTS
+  //
+  // Used to prevent selecting the same subject twice.
+  // =====================================================
+  const selectedSubjects = subjects
+    .map((item) => item.subject)
+    .filter(Boolean)
+
+  // =====================================================
+  // VALIDATION
+  // =====================================================
+  const hasMinimumSubjects = subjects.length >= 2
+
+  const allSubjectsSelected = subjects.every(
+    (item) => item.subject !== '',
+  )
+
+  const allGradesSelected = subjects.every(
+    (item) => item.grade !== '',
+  )
+
+  const canCheckEligibility =
+    examYear !== '' &&
+    hasMinimumSubjects &&
+    allSubjectsSelected &&
+    allGradesSelected
+
+  // =====================================================
+  // HANDLE ELIGIBILITY CHECK
+  // =====================================================
+  const handleCheckEligibility = () => {
+    setShowValidation(true)
+
+    if (!canCheckEligibility) {
+      return
+    }
+
+    // ===================================================
+    // LATER:
+    // Actual eligibility checking logic/API
+    // ===================================================
   }
 
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
       {/* =====================================================
           PAGE INTRODUCTION
-          Same left alignment as the Programmes page
       ===================================================== */}
       <section className="bg-white py-10 sm:py-12 lg:py-14">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -104,8 +193,8 @@ function EligibilityPage() {
 
             {/* Description */}
             <p className="mt-4 max-w-3xl text-base leading-7 text-[#405674] sm:text-lg">
-              Enter your A-Level results and discover degree programmes that
-              may be available to you.
+              Enter your A-Level results and discover degree
+              programmes that may be available to you.
             </p>
           </div>
         </div>
@@ -115,10 +204,9 @@ function EligibilityPage() {
           ELIGIBILITY CONTENT
       ===================================================== */}
       <section className="py-8 sm:py-10 lg:py-12">
-        {/* Keep the form narrower than the page intro */}
-        <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
           {/* =================================================
-              EXAMINATION YEAR
+              EXAMINATION DETAILS
           ================================================= */}
           <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-7">
             <h2 className="text-xl font-bold text-[#07183D] sm:text-2xl">
@@ -126,11 +214,12 @@ function EligibilityPage() {
             </h2>
 
             <p className="mt-2 text-sm leading-6 text-gray-600">
-              Select the examination year used for your A-Level results.
+              Select the examination year used for your A-Level
+              results.
             </p>
 
-            {/* Select */}
-            <div className="mt-6 w-full max-w-xl">
+            {/* Examination year */}
+            <div className="mt-6 w-full">
               <label
                 htmlFor="exam-year"
                 className="mb-2 block text-sm font-semibold text-[#07183D]"
@@ -140,14 +229,35 @@ function EligibilityPage() {
 
               <select
                 id="exam-year"
-                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-[#07183D] outline-none transition focus:border-[#C62828] focus:ring-2 focus:ring-[#C62828]/20"
+                value={examYear}
+                onChange={(event) => {
+                  setExamYear(event.target.value)
+                }}
+                className={`w-full rounded-xl border bg-white px-4 py-3 text-sm text-[#07183D] outline-none transition focus:ring-2 focus:ring-[#C62828]/20 ${
+                  showValidation && !examYear
+                    ? 'border-[#C62828]'
+                    : 'border-gray-300 focus:border-[#C62828]'
+                }`}
               >
-                <option value="">Select examination year</option>
+                <option value="">
+                  Select examination year
+                </option>
 
-                <option value="2025/2026">2025/2026</option>
+                <option value="2025/2026">
+                  2025/2026
+                </option>
 
-                <option value="2024/2025">2024/2025</option>
+                <option value="2024/2025">
+                  2024/2025
+                </option>
               </select>
+
+              {/* Year validation */}
+              {showValidation && !examYear && (
+                <p className="mt-2 text-sm text-[#C62828]">
+                  Please select your examination year.
+                </p>
+              )}
             </div>
           </div>
 
@@ -163,9 +273,18 @@ function EligibilityPage() {
                 </h2>
 
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-600">
-                  Add between 2 and 6 subjects and select the grade you
-                  received in each subject.
+                  Add between 2 and 6 subjects and select the
+                  grade you received in each subject.
                 </p>
+
+                {/* Minimum subjects validation */}
+                {showValidation &&
+                  subjects.length > 0 &&
+                  subjects.length < 2 && (
+                    <p className="mt-3 text-sm font-medium text-[#C62828]">
+                      Add at least 2 subjects to continue.
+                    </p>
+                  )}
               </div>
 
               <span className="shrink-0 text-sm font-medium text-gray-500">
@@ -174,7 +293,7 @@ function EligibilityPage() {
             </div>
 
             {/* =============================================
-                NO SUBJECTS
+                EMPTY STATE
             ============================================= */}
             {subjects.length === 0 ? (
               <div className="mt-7 rounded-xl border border-dashed border-gray-300 bg-[#F9FAFB] px-4 py-10 text-center sm:px-5">
@@ -187,8 +306,8 @@ function EligibilityPage() {
                 </h3>
 
                 <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
-                  Add your A-Level subjects and grades to calculate your
-                  current points.
+                  Add your A-Level subjects and grades to
+                  calculate your current points.
                 </p>
 
                 <button
@@ -210,17 +329,18 @@ function EligibilityPage() {
                     subject={item.subject}
                     grade={item.grade}
                     subjects={availableSubjects}
-                    selectedSubjects={subjects
-                      .map((item) => item.subject)
-                      .filter(Boolean)}
+                    selectedSubjects={selectedSubjects}
                     grades={availableGrades}
+                    showValidation={showValidation}
                     onSubjectChange={(value: string) =>
                       updateSubject(item.id, value)
                     }
                     onGradeChange={(value: string) =>
                       updateGrade(item.id, value)
                     }
-                    onRemove={() => removeSubject(item.id)}
+                    onRemove={() =>
+                      removeSubject(item.id)
+                    }
                   />
                 ))}
 
@@ -233,6 +353,13 @@ function EligibilityPage() {
                   >
                     + Add another subject
                   </button>
+                )}
+
+                {/* Maximum subjects message */}
+                {subjects.length >= 6 && (
+                  <p className="text-center text-sm text-gray-500">
+                    You can add a maximum of 6 subjects.
+                  </p>
                 )}
               </div>
             )}
@@ -255,7 +382,9 @@ function EligibilityPage() {
                   </p>
 
                   <span className="text-sm font-medium text-gray-500">
-                    {totalPoints === 1 ? 'point' : 'points'}
+                    {totalPoints === 1
+                      ? 'point'
+                      : 'points'}
                   </span>
                 </div>
 
@@ -267,8 +396,12 @@ function EligibilityPage() {
               {/* Eligibility button */}
               <button
                 type="button"
-                disabled={subjects.length < 2}
-                className="w-full rounded-xl bg-[#C62828] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#A91F1F] focus:outline-none focus:ring-2 focus:ring-[#C62828]/30 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+                onClick={handleCheckEligibility}
+                className={`w-full rounded-xl px-6 py-3.5 text-sm font-semibold text-white transition focus:outline-none focus:ring-2 focus:ring-[#C62828]/30 focus:ring-offset-2 sm:w-auto ${
+                  canCheckEligibility
+                    ? 'bg-[#C62828] hover:bg-[#A91F1F]'
+                    : 'cursor-not-allowed bg-[#C62828]/60'
+                }`}
               >
                 Check my eligibility →
               </button>
