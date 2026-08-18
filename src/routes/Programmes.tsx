@@ -1,9 +1,12 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { SlidersHorizontal, ChevronDown } from 'lucide-react'
+import { SlidersHorizontal,  } from 'lucide-react'
 import { useState } from "react"
 import ProgrammeCard from '../components/programmes/ProgrammeCard'
 import ProgrammeSearch from '../components/programmes/ProgrammeSearch'
-import { programmes } from '../data/programmes'
+import {
+  programmes,
+  getRecommendationScore,
+} from "../data/programmes"
 import ProgrammeFilters from "../components/programmes/ProgrammeFilters"
 
 export const Route = createFileRoute('/Programmes')({
@@ -19,7 +22,7 @@ export const Route = createFileRoute('/Programmes')({
 function ProgrammesPage() {
   const { category } = Route.useSearch()
   const [search, setSearch] = useState("")
-  
+  const [sortBy, setSortBy] = useState("recommended")
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [field, setField] = useState("")
   const [region, setRegion] = useState("")
@@ -99,6 +102,23 @@ function ProgrammesPage() {
       }),
     })
   }
+
+  const sortedProgrammes = [...filteredProgrammes].sort(
+  (a, b) => {
+    if (sortBy === "newest") {
+      return b.introducedYear - a.introducedYear
+    }
+
+    if (sortBy === "demand") {
+      return b.marketDemand - a.marketDemand
+    }
+
+    return (
+      getRecommendationScore(b) -
+      getRecommendationScore(a)
+    )
+  },
+)
 
   return (
 
@@ -241,14 +261,23 @@ function ProgrammesPage() {
                 </div>
 
                 {/* Sort */}
-                <button
-                  type="button"
-                  className="flex w-full items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 transition-colors hover:border-[#C62828] sm:w-auto"
-                >
-                  <span>Recommended</span>
+              <select
+  value={sortBy}
+  onChange={(e) => setSortBy(e.target.value)}
+  className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-[#C62828]"
+>
+  <option value="recommended">
+    Recommended
+  </option>
 
-                  <ChevronDown className="h-4 w-4 text-gray-400" />
-                </button>
+  <option value="newest">
+    Newest
+  </option>
+
+  <option value="demand">
+    Most in demand
+  </option>
+</select>
               </div>
 
               {/* Placeholder */}
@@ -327,7 +356,7 @@ function ProgrammesPage() {
             </div>
           ) : (
             <div className="grid gap-5 lg:grid-cols-2">
-              {filteredProgrammes.map((programme) => (
+             {sortedProgrammes.map((programme) => (
                 <ProgrammeCard
                   key={programme.code}
                   code={programme.code}

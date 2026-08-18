@@ -10,6 +10,8 @@ export type Programme = {
   fieldCategory: string
   capacity: number
   entryRequirements: string
+  introducedYear: number
+marketDemand: number
   gradeConditions: {
     subject: string
     condition: string
@@ -30,7 +32,8 @@ export const programmes: Programme[] = [
     points: 4,
     duration: "5 years",
     capacity: 120,
-
+introducedYear: 2018,
+  marketDemand: 10,
     entryRequirements:
       "Candidates must have the required qualifications in the relevant subjects as specified in the official admission guidebook.",
 
@@ -63,6 +66,9 @@ export const programmes: Programme[] = [
     points: 4,
     duration: "3 years",
     capacity: 100,
+    introducedYear: 2023,
+  marketDemand: 9,
+
 
     entryRequirements:
       "Candidates must meet the required qualifications in the relevant subjects for admission to the programme.",
@@ -92,6 +98,9 @@ export const programmes: Programme[] = [
     points: 4,
     duration: "4 years",
     capacity: 80,
+    introducedYear: 2020,
+  marketDemand: 7,
+
 
     entryRequirements:
       "Candidates must satisfy the minimum entry qualifications specified for engineering programmes.",
@@ -114,3 +123,26 @@ export const programmes: Programme[] = [
     guidebookPage: 178,
   },
 ]
+export const getRecencyScore = (introducedYear: number) => {
+  const currentYear = 2026
+  const age = currentYear - introducedYear
+
+  if (age <= 1) return 10
+  if (age <= 2) return 9
+  if (age <= 3) return 8
+  if (age <= 5) return 6
+  if (age <= 8) return 4
+
+  return 2
+}
+
+export const getRecommendationScore = (programme: Programme) => {
+  const recencyScore = getRecencyScore(
+    programme.introducedYear,
+  )
+
+  return (
+    programme.marketDemand * 0.6 +
+    recencyScore * 0.4
+  )
+}

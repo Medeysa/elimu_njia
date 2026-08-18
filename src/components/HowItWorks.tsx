@@ -8,7 +8,7 @@ import {
 function HowItWorks() {
   const steps = [
      {
-      number: "02",
+      number: "01",
       title: "Explore programmes",
       description:
         "Browse degree programmes from universities and other institutions across Tanzania.",
