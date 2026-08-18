@@ -15,7 +15,7 @@ function HowItWorks() {
       icon: Search,
     },
     {
-      number: "01",
+      number: "02",
       title: "Enter your results",
       description:
         "Add your A-Level exam year, subjects and grades to get started.",
