@@ -358,16 +358,16 @@ function ProgrammesPage() {
             <div className="grid gap-5 lg:grid-cols-2">
              {sortedProgrammes.map((programme) => (
                 <ProgrammeCard
-                  key={programme.code}
-                  code={programme.code}
-                  name={programme.name}
-                  award={programme.award}
-                  institution={programme.institution}
-                  region={programme.region}
-                  points={programme.points}
-                  duration={programme.duration}
-                  capacity={programme.capacity}
-                />
+  name={programme.name}
+  award={programme.award}
+  institution={programme.institution}
+  region={programme.region}
+  code={programme.code}
+  points={programme.points}
+  duration={programme.duration}
+  capacity={programme.capacity}
+  
+/>
               ))}
             </div>
           )}

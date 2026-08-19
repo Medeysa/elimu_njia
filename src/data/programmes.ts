@@ -122,7 +122,104 @@ introducedYear: 2018,
 
     guidebookPage: 178,
   },
+    {
+    code: "BUS001",
+    name: "Bachelor of Commerce",
+    field: "Commerce",
+    fieldCategory: "Business",
+    award: "Bachelor Degree",
+    institution: "University of Dar es Salaam",
+    region: "Dar es Salaam",
+    points: 4,
+    duration: "3 years",
+    capacity: 150,
+    introducedYear: 2019,
+    marketDemand: 8,
+
+    entryRequirements:
+      "Candidates must meet the required qualifications for admission to business-related programmes.",
+
+    gradeConditions: [
+      {
+        subject: "Mathematics",
+        condition: "At least D",
+      },
+      {
+        subject: "English",
+        condition: "At least D",
+      },
+    ],
+
+    guidebookPage: 190,
+  },
+
+  {
+    code: "NUR001",
+    name: "Bachelor of Science in Nursing",
+    field: "Nursing",
+    fieldCategory: "Health Sciences",
+    award: "Bachelor Degree",
+    institution: "Muhimbili University of Health and Allied Sciences",
+    region: "Dar es Salaam",
+    points: 4,
+    duration: "4 years",
+    capacity: 100,
+    introducedYear: 2021,
+    marketDemand: 9,
+
+    entryRequirements:
+      "Candidates must meet the required qualifications for admission to nursing programmes.",
+
+    gradeConditions: [
+      {
+        subject: "Biology",
+        condition: "At least C",
+      },
+      {
+        subject: "Chemistry",
+        condition: "At least D",
+      },
+      {
+        subject: "Physics",
+        condition: "At least E",
+      },
+    ],
+
+    guidebookPage: 155,
+  },
+
+  {
+    code: "STAT001",
+    name: "Bachelor of Science in Statistics",
+    field: "Statistics",
+    fieldCategory: "Science",
+    award: "Bachelor Degree",
+    institution: "University of Dodoma",
+    region: "Dodoma",
+    points: 3,
+    duration: "3 years",
+    capacity: 80,
+    introducedYear: 2022,
+    marketDemand: 7,
+
+    entryRequirements:
+      "Candidates must meet the required qualifications for admission to statistics programmes.",
+
+    gradeConditions: [
+      {
+        subject: "Mathematics",
+        condition: "At least C",
+      },
+      {
+        subject: "Physics",
+        condition: "At least D",
+      },
+    ],
+
+    guidebookPage: 220,
+  },
 ]
+
 export const getRecencyScore = (introducedYear: number) => {
   const currentYear = 2026
   const age = currentYear - introducedYear

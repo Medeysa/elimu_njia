@@ -16,6 +16,7 @@ type ProgrammeCardProps = {
   points: number
   duration: string
   capacity: number
+  totalPoints?: number
 }
 
 function ProgrammeCard({
@@ -27,6 +28,7 @@ function ProgrammeCard({
   points,
   duration,
   capacity,
+  totalPoints,
 }: ProgrammeCardProps) {
   return (
     <Link
@@ -96,20 +98,34 @@ function ProgrammeCard({
 
 
         {/* Points */}
-        <div>
-          <p className="text-xs font-medium text-gray-400">
-            Minimum points
-          </p>
+      {/* Your points */}
+{/* Your points - only shown during eligibility checking */}
+{totalPoints !== undefined && (
+  <div>
+    <p className="text-xs font-medium text-gray-400">
+      Your points
+    </p>
 
-          <div className="mt-1 flex items-center gap-1.5">
-            <Trophy className="h-4 w-4 text-[#C62828]" />
+    <div className="mt-1 flex items-center gap-1.5">
+      <Trophy className="h-4 w-4 text-[#C62828]" />
 
-            <p className="text-sm font-semibold text-[#07183D]">
-              {points} points
-            </p>
-          </div>
-        </div>
+      <p className="text-sm font-semibold text-[#07183D]">
+        {totalPoints} points
+      </p>
+    </div>
+  </div>
+)}
 
+{/* Minimum points */}
+<div>
+  <p className="text-xs font-medium text-gray-400">
+    Minimum points
+  </p>
+
+  <p className="mt-1 text-sm font-semibold text-[#07183D]">
+    {points} points
+  </p>
+</div>
 
         {/* Duration */}
         <div>
