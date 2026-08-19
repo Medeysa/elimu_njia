@@ -18,12 +18,8 @@ export const Route = createFileRoute("/Eligibility/results")({
   component: EligibilityResultsPage,
 })
 
-const resultCounts = {
-  qualify: 12,
-  pointsShort: 5,
-  gradeShort: 3,
-  reviewWording: 2,
-}
+
+
 
 function EligibilityResultsPage() {
   const { examYear, totalPoints } = Route.useSearch()
@@ -43,6 +39,23 @@ function EligibilityResultsPage() {
     NUR001: "gradeShort",
     STAT001: "reviewWording",
   }
+const resultCounts = {
+  qualify: programmes.filter(
+    (programme) => programmeCategories[programme.code] === "qualify",
+  ).length,
+
+  pointsShort: programmes.filter(
+    (programme) => programmeCategories[programme.code] === "pointsShort",
+  ).length,
+
+  gradeShort: programmes.filter(
+    (programme) => programmeCategories[programme.code] === "gradeShort",
+  ).length,
+
+  reviewWording: programmes.filter(
+    (programme) => programmeCategories[programme.code] === "reviewWording",
+  ).length,
+}
 
   const filteredProgrammes = programmes.filter(
     (programme) =>
@@ -82,7 +95,15 @@ function EligibilityResultsPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
             {/* You qualify */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <button
+  type="button"
+  onClick={() => setActiveCategory("qualify")}
+  className={`w-full rounded-2xl border bg-white p-5 text-left shadow-sm transition-all duration-200 ${
+    activeCategory === "qualify"
+      ? "border-[#C62828] shadow-md ring-2 ring-[#C62828]/10"
+      : "border-gray-200 hover:-translate-y-1 hover:border-[#C62828]/40 hover:shadow-md"
+  }`}
+>
               <div className="flex items-center justify-between">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-green-600">
                   <CheckCircle2 className="h-5 w-5" />
@@ -100,10 +121,18 @@ function EligibilityResultsPage() {
               <p className="mt-1 text-xs text-gray-500">
                 Programmes you meet the requirements for.
               </p>
-            </div>
+            </button>
 
             {/* Points short */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+           <button
+  type="button"
+  onClick={() => setActiveCategory("pointsShort")}
+  className={`w-full rounded-2xl border bg-white p-5 text-left shadow-sm transition-all duration-200 ${
+    activeCategory === "pointsShort"
+      ? "border-[#C62828] shadow-md ring-2 ring-[#C62828]/10"
+      : "border-gray-200 hover:-translate-y-1 hover:border-[#C62828]/40 hover:shadow-md"
+  }`}
+>
               <div className="flex items-center justify-between">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
                   <Target className="h-5 w-5" />
@@ -121,10 +150,18 @@ function EligibilityResultsPage() {
               <p className="mt-1 text-xs text-gray-500">
                 Programmes where your points are slightly below the requirement.
               </p>
-            </div>
+            </button>
 
             {/* Grade short */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <button
+  type="button"
+  onClick={() => setActiveCategory("gradeShort")}
+  className={`w-full rounded-2xl border bg-white p-5 text-left shadow-sm transition-all duration-200 ${
+    activeCategory === "gradeShort"
+      ? "border-[#C62828] shadow-md ring-2 ring-[#C62828]/10"
+      : "border-gray-200 hover:-translate-y-1 hover:border-[#C62828]/40 hover:shadow-md"
+  }`}
+>
               <div className="flex items-center justify-between">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
                   <TriangleAlert className="h-5 w-5" />
@@ -142,10 +179,18 @@ function EligibilityResultsPage() {
               <p className="mt-1 text-xs text-gray-500">
                 Programmes blocked by a specific grade condition.
               </p>
-            </div>
+            </button>
 
             {/* Review wording */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <button
+  type="button"
+  onClick={() => setActiveCategory("reviewWording")}
+  className={`w-full rounded-2xl border bg-white p-5 text-left shadow-sm transition-all duration-200 ${
+    activeCategory === "reviewWording"
+      ? "border-[#C62828] shadow-md ring-2 ring-[#C62828]/10"
+      : "border-gray-200 hover:-translate-y-1 hover:border-[#C62828]/40 hover:shadow-md"
+  }`}
+>
               <div className="flex items-center justify-between">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                   <FileText className="h-5 w-5" />
@@ -163,7 +208,7 @@ function EligibilityResultsPage() {
               <p className="mt-1 text-xs text-gray-500">
                 Programmes requiring you to review the official wording.
               </p>
-            </div>
+            </button>
           </div>
 
           {/* =================================================
