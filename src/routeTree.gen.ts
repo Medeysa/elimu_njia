@@ -16,6 +16,7 @@ import { Route as InstitutionsRouteImport } from './routes/Institutions'
 import { Route as ProgrammesRouteImport } from './routes/Programmes'
 import { Route as EligibilityIndexRouteImport } from './routes/Eligibility.index'
 import { Route as EligibilityResultsRouteImport } from './routes/Eligibility.results'
+import { Route as InstitutionsInstitutionRouteImport } from './routes/Institutions_.$institution'
 import { Route as ProgrammesCodeRouteImport } from './routes/programmes.$code'
 
 const IndexRoute = IndexRouteImport.update({
@@ -53,6 +54,11 @@ const EligibilityResultsRoute = EligibilityResultsRouteImport.update({
   path: '/results',
   getParentRoute: () => EligibilityRoute,
 } as any)
+const InstitutionsInstitutionRoute = InstitutionsInstitutionRouteImport.update({
+  id: '/Institutions_/$institution',
+  path: '/Institutions/$institution',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProgrammesCodeRoute = ProgrammesCodeRouteImport.update({
   id: '/programmes/$code',
   path: '/programmes/$code',
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/Institutions': typeof InstitutionsRoute
   '/Programmes': typeof ProgrammesRoute
   '/Eligibility/results': typeof EligibilityResultsRoute
+  '/Institutions/$institution': typeof InstitutionsInstitutionRoute
   '/programmes/$code': typeof ProgrammesCodeRoute
   '/Eligibility/': typeof EligibilityIndexRoute
 }
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/Institutions': typeof InstitutionsRoute
   '/Programmes': typeof ProgrammesRoute
   '/Eligibility/results': typeof EligibilityResultsRoute
+  '/Institutions/$institution': typeof InstitutionsInstitutionRoute
   '/programmes/$code': typeof ProgrammesCodeRoute
   '/Eligibility': typeof EligibilityIndexRoute
 }
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/Institutions': typeof InstitutionsRoute
   '/Programmes': typeof ProgrammesRoute
   '/Eligibility/results': typeof EligibilityResultsRoute
+  '/Institutions_/$institution': typeof InstitutionsInstitutionRoute
   '/programmes/$code': typeof ProgrammesCodeRoute
   '/Eligibility/': typeof EligibilityIndexRoute
 }
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/Institutions'
     | '/Programmes'
     | '/Eligibility/results'
+    | '/Institutions/$institution'
     | '/programmes/$code'
     | '/Eligibility/'
   fileRoutesByTo: FileRoutesByTo
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/Institutions'
     | '/Programmes'
     | '/Eligibility/results'
+    | '/Institutions/$institution'
     | '/programmes/$code'
     | '/Eligibility'
   id:
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/Institutions'
     | '/Programmes'
     | '/Eligibility/results'
+    | '/Institutions_/$institution'
     | '/programmes/$code'
     | '/Eligibility/'
   fileRoutesById: FileRoutesById
@@ -127,6 +139,7 @@ export interface RootRouteChildren {
   GuideRoute: typeof GuideRoute
   InstitutionsRoute: typeof InstitutionsRoute
   ProgrammesRoute: typeof ProgrammesRoute
+  InstitutionsInstitutionRoute: typeof InstitutionsInstitutionRoute
   ProgrammesCodeRoute: typeof ProgrammesCodeRoute
 }
 
@@ -181,6 +194,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EligibilityResultsRouteImport
       parentRoute: typeof EligibilityRoute
     }
+    '/Institutions_/$institution': {
+      id: '/Institutions_/$institution'
+      path: '/Institutions/$institution'
+      fullPath: '/Institutions/$institution'
+      preLoaderRoute: typeof InstitutionsInstitutionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/programmes/$code': {
       id: '/programmes/$code'
       path: '/programmes/$code'
@@ -211,6 +231,7 @@ const rootRouteChildren: RootRouteChildren = {
   GuideRoute: GuideRoute,
   InstitutionsRoute: InstitutionsRoute,
   ProgrammesRoute: ProgrammesRoute,
+  InstitutionsInstitutionRoute: InstitutionsInstitutionRoute,
   ProgrammesCodeRoute: ProgrammesCodeRoute,
 }
 export const routeTree = rootRouteImport
