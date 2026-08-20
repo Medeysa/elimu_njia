@@ -1,15 +1,26 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Building2, MapPin, ArrowRight, Search } from 'lucide-react'
 import { programmes } from '../data/programmes'
 
 export const Route = createFileRoute('/Institutions')({
+  validateSearch: (search: Record<string, unknown>) => ({
+    search:
+      typeof search.search === 'string'
+        ? search.search
+        : '',
+  }),
+
   component: InstitutionsPage,
 })
 
 function InstitutionsPage() {
-  const [search, setSearch] = useState('')
+const { search: searchQuery } = Route.useSearch()
 
+const [search, setSearch] = useState(searchQuery)
+useEffect(() => {
+  setSearch(searchQuery)
+}, [searchQuery])
   // =====================================================
   // INSTITUTIONS DATA
   // =====================================================

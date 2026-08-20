@@ -35,6 +35,7 @@ function InstitutionDetailsPage() {
           {/* Back */}
           <Link
             to="/Institutions"
+            search={{ search: "" }}
             className="group inline-flex items-center gap-2 text-sm font-semibold text-[#C62828] transition-colors hover:text-[#A91F1F]"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />

@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { SlidersHorizontal,  } from 'lucide-react'
-import { useState } from "react"
+import { useEffect, useState } from 'react'
 import ProgrammeCard from '../components/programmes/ProgrammeCard'
 import ProgrammeSearch from '../components/programmes/ProgrammeSearch'
 import {
@@ -10,18 +10,23 @@ import {
 import ProgrammeFilters from "../components/programmes/ProgrammeFilters"
 
 export const Route = createFileRoute('/Programmes')({
-  validateSearch: (search: Record<string, unknown>) => ({
-    category:
-      typeof search.category === "string"
-        ? search.category
-        : "",
-  }),
+validateSearch: (search: Record<string, unknown>) => ({
+  category:
+    typeof search.category === 'string'
+      ? search.category
+      : '',
 
+  search:
+    typeof search.search === 'string'
+      ? search.search
+      : '',
+}),
   component: ProgrammesPage,
 })
 function ProgrammesPage() {
-  const { category } = Route.useSearch()
-  const [search, setSearch] = useState("")
+const { category, search: searchQuery } = Route.useSearch()
+
+const [search, setSearch] = useState(searchQuery)
   const [sortBy, setSortBy] = useState("recommended")
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [field, setField] = useState("")
@@ -31,6 +36,9 @@ function ProgrammesPage() {
   const navigate = useNavigate({
   from: Route.fullPath,
 })
+useEffect(() => {
+  setSearch(searchQuery)
+}, [searchQuery])
 
   const fields = [
     ...new Set(
@@ -57,13 +65,17 @@ function ProgrammesPage() {
   ]
 
   const filteredProgrammes = programmes.filter((programme) => {
-    const matchesSearch =
-      search === "" ||
-      programme.name.toLowerCase().includes(search.toLowerCase()) ||
-      programme.institution.toLowerCase().includes(search.toLowerCase()) ||
-      programme.region.toLowerCase().includes(search.toLowerCase()) ||
-      programme.code.toLowerCase().includes(search.toLowerCase())
+const searchTerm = search.toLowerCase().trim()
 
+const matchesSearch =
+  searchTerm === '' ||
+  programme.name.toLowerCase().includes(searchTerm) ||
+  programme.institution.toLowerCase().includes(searchTerm) ||
+  programme.region.toLowerCase().includes(searchTerm) ||
+  programme.code.toLowerCase().includes(searchTerm) ||
+  programme.field.toLowerCase().includes(searchTerm) ||
+  programme.fieldCategory.toLowerCase().includes(searchTerm) ||
+  programme.award.toLowerCase().includes(searchTerm)
     const matchesField =
       field === "" || programme.field === field
 
